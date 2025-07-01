@@ -4,7 +4,7 @@ library("sf")
 library("geosphere")
 library("osrm")
 
-setwd("/Users/lshms101/Desktop/Projects/FGSIM")
+# setting working directory here
 
 source("wspsample.R")
 source("PopBoundaryAPI.R")
@@ -19,7 +19,7 @@ level = 3
 year = 2011
 
 # Download data
-setwd("/Users/lshms101/Desktop/Projects/FGSIM/ParameterPrep/PopDistrict")
+# setting working directory to population data folder here
 
 Ger = getJSON(countryCode, level, timeout = 1000)
 GerS = as_Spatial(Ger$geometry[ID2Geom$JsonNr])
@@ -27,7 +27,7 @@ GerS = as_Spatial(Ger$geometry[ID2Geom$JsonNr])
 
 # Download population data
 pop = getPOP(countryCode, year, 1000)
-setwd("/Users/lshms101/Desktop/Projects/FGSIM")
+# Set working directory back to project folder
 
 samO = list()
 samD = list()
