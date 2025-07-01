@@ -1,7 +1,7 @@
 # Include weights wrapper here
 # Double checking the transformations
 
-setwd("/Users/lshms101/Desktop/Projects/FGSIM/ParameterPrep/Results")
+# Setting wd to parameter folder here
 
 classes = c("Beeline", "RouteTime", "Gravity", "Circle", "Radiation")
 classesAbbr = c("B", "T", "G", "C", "R")
@@ -155,7 +155,7 @@ keep = c(keep, c(outer(paste("pars", classesAbbr, "s_", sep = ""), c("N", "E", "
 
 rm(list = setdiff(ls(), keep))
 
-setwd("/Users/lshms101/Desktop/Projects/FGSIM")
+# Setting wd to project folder to save parameters
 save.image("Parameters.RData")
 
 
