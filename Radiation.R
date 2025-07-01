@@ -7,7 +7,7 @@ library("Rcpp")
 library("rnaturalearth")
 library("units")
 
-setwd("/Users/lshms101/Desktop/Projects/FGSIM")
+# Setting working directory here
 
 source("wspsample.R")
 source("PopBoundaryAPI.R")
@@ -15,6 +15,7 @@ source("ParameterPrep/Fitting.R")
 # sourceCpp("ParameterPrep/Radiation.cpp")
 sourceCpp("ParameterPrep/Radiation2.cpp")
 
+# Needs a table IDlookup.csv mapping shapefile and IDs
 ID2Geom = read.csv("Data/IDlookup.csv", header = T, fileEncoding = "UTF-8")
 IDs = ID2Geom$ID
 
@@ -23,7 +24,7 @@ level = 3
 year = 2011
 
 # Download data
-setwd("/Users/lshms101/Desktop/Projects/FGSIM/ParameterPrep/PopDistrict")
+# Setting working directory for data here
 
 Ger = getJSON(countryCode, level, timeout = 1000)
 GerS = as_Spatial(Ger$geometry[ID2Geom$JsonNr])
@@ -31,7 +32,7 @@ GerS = as_Spatial(Ger$geometry[ID2Geom$JsonNr])
 
 # Download population data
 pop = getPOP(countryCode, year, 1000)
-setwd("/Users/lshms101/Desktop/Projects/FGSIM")
+# Setting working directory back to project folder
 
 samO = list()
 samD = list()
@@ -88,10 +89,9 @@ europe$name
 # plot(GerBuffer, add = T, col = rgb(1, 0, 0, alpha = 0.2))
 
 # Load worldpop data and save everything that is in the MBR around the buffers
-# Ignore tiny countries?
 ngbCodes = c("GBR", "CHE", "SWE", "SVK", "SVN", "POL", "NOR", "NLD", "LUX",
              "LIE", "ITA", "HUN", "FRA", "DNK", "CZE", "BIH", "BEL", "AUT", "HRV")
-setwd("/Users/lshms101/Desktop/Projects/FGSIM/ParameterPrep/PopDistrict")
+# Setting working directory to population data folder
 popNGB = list()
 for(i in 1:length(ngbCodes)){
   temp = getPOP(ngbCodes[i], year, 1000)
@@ -99,7 +99,7 @@ for(i in 1:length(ngbCodes)){
   popNGB[[i]] = temp
   print(i)
 }
-setwd("/Users/lshms101/Desktop/Projects/FGSIM")
+# Setting working directory back to project folder
 
 popNGB[[20]] = pop
 popAll = do.call(merge, popNGB)
@@ -107,10 +107,6 @@ popAll = mask(popAll, as(GerBuffer, "Spatial"))
 
 popAllLog = aggregate(popAll, fact = 10, sum)
 values(popAllLog) = log(values(popAllLog))
-
-# plot(popAllLog)
-# plot(europe$geometry, add = T)
-# plot(GerBuffer, add = T)
 
 # library(ggspatial)
 # popAllLog_df <- as.data.frame(rasterToPoints(popAllLog), xy = TRUE)
