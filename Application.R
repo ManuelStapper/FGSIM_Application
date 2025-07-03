@@ -111,12 +111,24 @@ O[indW, indW] = nbOrder(nb2mat(poly2nb(shp[indW], snap = 1)) > 0)
 ### Interlude: Examples why NGB order is not always great ###
 #############################################################
 
+cols = c("#FDB913", "#00A0E2", "#591244", "#00BF6F", "#209A8D", "#003151")
+
 # 1)
 # District of Göttingen = Göttingen + Osterode am Harz
 
-png("Plots/Example1.png")
-plot(shp[O[26, ] == 1], col = c(cols[1], rep(cols[2], 3), cols[1], rep(cols[2], 2)), border = "white", lwd = 2)
-plot(Ger$geometry[c(306, 372)], border = "red", add = T, col = cols[2], lwd = 2)
+# png("Plots/Example1.png", res = 350)
+# plot(shp[O[26, ] == 1], col = c(cols[1], rep(cols[2], 3), cols[1], rep(cols[2], 2)), border = "white", lwd = 2)
+# plot(Ger$geometry[c(306, 372)], border = "red", add = T, col = cols[2], lwd = 2)
+# plot(shp[IDs == 3159], add = T, lwd = 2)
+# dev.off()
+
+png("Plots/Example1.png", 
+    width = 6*1.1, height = 6, units = "in", res = 350)
+# Minimal margins for maps
+par(mar = c(0, 0, 0, 0))
+plot(shp[O[26, ] == 1], col = c(cols[1], rep(cols[5], 3), cols[1], rep(cols[5], 2)), 
+     border = "white", lwd = 2, axes = FALSE)  # Remove axes for cleaner look
+plot(Ger$geometry[c(306, 372)], border = "red", add = T, col = cols[5], lwd = 2)
 plot(shp[IDs == 3159], add = T, lwd = 2)
 dev.off()
 
@@ -126,15 +138,23 @@ dev.off()
 OW = nbOrder(nb2mat(poly2nb(shp[indW], snap = 1)) > 0)
 OT = nbOrder(nb2mat(poly2nb(shp, snap = 1)) > 0)[indW, indW]
 indTemp = which((OW - OT) == max(OW - OT), arr.ind = T)
-
-
 indTemp = sort(unique(c(which(OW[33, ] <= 1), which(OW[40, ] <= 2))))
 
-png("Plots/Example2.png")
-plot(shp[indW[indTemp]], col = cols[4], border = "white", lwd = 2)
-plot(shp[c(48, 58)], add = T, col = cols[2], border = "white", lwd = 2)
-plot(shp[indW[33]], col = cols[4], border = "black", lwd = 2, add = T)
-plot(shp[indW[40]], col = cols[4], border = "black", lwd = 2, add = T)
+# png("Plots/Example2.png")
+# plot(shp[indW[indTemp]], col = cols[4], border = "white", lwd = 2)
+# plot(shp[c(48, 58)], add = T, col = cols[2], border = "white", lwd = 2)
+# plot(shp[indW[33]], col = cols[4], border = "black", lwd = 2, add = T)
+# plot(shp[indW[40]], col = cols[4], border = "black", lwd = 2, add = T)
+# dev.off()
+
+png("Plots/Example2.png",
+    width = 8.96, height = 6, units = "in", res = 350)
+par(mar = c(0, 0, 0, 0))
+plot(shp[c(indW[indTemp], 48, 58)], border = "white")
+plot(shp[indW[indTemp]], col = cols[5], border = "white", lwd = 2, add = T)
+plot(shp[c(48, 58)], add = T, col = cols[1], border = "white", lwd = 2)
+plot(shp[indW[33]], col = cols[5], border = "black", lwd = 2, add = T)
+plot(shp[indW[40]], col = cols[5], border = "black", lwd = 2, add = T)
 dev.off()
 
 # 3)
@@ -147,13 +167,14 @@ exp(parsB_E$u[59, 71])
 D[22, 27]
 D[59, 71]
 
-png("Plots/Example3.png")
-plot(shp[indE[c(22, 27)]], col = cols[1], border = "white", lwd = 2, xlim = c(9.9, 13.8))
+png("Plots/Example3.png",
+    width = 15.52, height = 6, units = "in", res = 350)
+par(mar = c(0, 0, 0, 0))
+plot(shp[indE[c(22, 27)]], col = cols[5], border = "white", lwd = 2, xlim = c(9.9, 13.8))
 shpTemp <- st_geometry(shp[indE[c(59, 71)]]) + c(-1.2, 2.5)
-plot(shpTemp, add = T, col = cols[1], border = "white", lwd = 2)
+plot(shpTemp, add = T, col = cols[5], border = "white", lwd = 2)
 rect(xleft = 9.9, ybottom = 53.29, xright = 10.5, ytop = 53.62)
 dev.off()
-
 
 # 4) 
 
@@ -176,8 +197,10 @@ for(i in 1:401){
   }
 }
 
-png("Plots/Example4.png")
-plot(shp[c(351, 338, 346, 350)], col = cols[1], border = "white", lwd = 2)
+png("Plots/Example4.png",
+    width = 8.69, height = 6, units = "in", res = 350)
+par(mar = c(0.5, 0.5, 1, 0.5))
+plot(shp[c(351, 338, 346, 350)], col = cols[5], border = "white", lwd = 2)
 dev.off()
 
 # 5)
@@ -193,20 +216,39 @@ which(ID2Geom$Name == "Vorpommern-Greifswald")
 plot(shp[c(343, 350)], col = cols[1], border = "white", lwd = 2)
 
 library("raster")
-popDens = raster("/Users/lshms101/Desktop/Projects/FGSIM/ParameterPrep/PopDistrict/DEU2011.tif")
+popDens = raster("PopDistrict/DEU2011.tif")
 vals = values(popDens)
 vals[!is.na(vals)] = log(vals[!is.na(vals)] + 1)
 values(popDens) = vals
 
-png("Plots/Example5a.png")
-par(bty = "n")
+
+png("Plots/Example5a.png",
+    width = 6, height = 6, units = "in", res = 350)
+par(bty = "n", mar = c(0.5, 0.5, 1, 0.5))
 plot(mask(crop(popDens, as_Spatial(shp[c(120, 163)])), as_Spatial(shp[c(120, 163)])), legend = F, axes = F)
 plot(shp[c(120, 163)], add = T, border = "black", lwd = 2)
 dev.off()
 
-png("Plots/Example5b.png")
-par(bty = "n")
+png("Plots/Example5b.png",
+    width = 6, height = 6, units = "in", res = 350)
+par(bty = "n", mar = c(0.5, 0.5, 1, 0.5))
 plot(mask(crop(popDens, as_Spatial(shp[c(343, 350)])), as_Spatial(shp[c(343, 350)])), legend = F, axes = F)
+plot(shp[c(343, 350)], add = T, border = "black", lwd = 2)
+dev.off()
+
+
+png("Plots/Example5.png",
+    width = 8, height = 6, units = "in", res = 350)
+layout(matrix(c(1, 2), nrow = 1, ncol = 2))
+par(bty = "n", mar = c(0, 0, 0, 0))
+
+plot(mask(crop(popDens, as_Spatial(shp[c(120, 163)])), as_Spatial(shp[c(120, 163)])), 
+     legend = F, axes = F)
+plot(shp[c(120, 163)], add = T, border = "black", lwd = 2)
+
+# Right panel
+plot(mask(crop(popDens, as_Spatial(shp[c(343, 350)])), as_Spatial(shp[c(343, 350)])), 
+     legend = F, axes = F)
 plot(shp[c(343, 350)], add = T, border = "black", lwd = 2)
 dev.off()
 
@@ -1064,15 +1106,15 @@ dEst = tail(fittedTemp$coefficients, 2)[1]
 # Download population data
 library(raster)
 library(geosphere)
-pop = getPOP("DEU", 2011, 1000)
+pop = getPOP("DEU", 2011, 1000) # Needs PopBoundaryAPI.R from other GitHub repo
 # set wd back to project folder
 
 popS = mask(crop(pop, as_Spatial(shp[indS])), as_Spatial(shp[indS]))
 popS10 = aggregate(x = popS, fact = 10, FUN = sum)
 riskRaster = popS10
 popSmat = as.matrix(popS10)
-dim(popSmat)
-plot(popS10)
+# dim(popSmat)
+# plot(popS10)
 
 risks = matrix(0, nrow = prod(dim(popSmat)), ncol = length(current))
 risksW = matrix(0, nrow = prod(dim(popSmat)), ncol = length(current))
@@ -1228,7 +1270,7 @@ ggplot() +
     legend.title = element_text(size = 16),
     legend.text = element_text(size = 12)
   )
-ggsave("Plots/RiskMap.png", width = 12, height = 8, dpi = 300)
+ggsave("Plots/RiskMap.png", width = 8, height = 6, dpi = 350)
 
 ggplot() +
   geom_raster(data = raster1_df, aes(x = x, y = y, fill = value)) +
@@ -1250,4 +1292,4 @@ ggplot() +
     legend.title = element_text(size = 16),
     legend.text = element_text(size = 12)
   )
-ggsave("Plots/RiskMapIndiv.png", width = 12, height = 8, dpi = 300)
+ggsave("Plots/RiskMapIndiv.png", width = 8, height = 6, dpi = 350)
